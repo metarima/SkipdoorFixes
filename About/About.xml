@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Skipdoor Fixes</name>
+  <author>Luís Sousa</author>
+  <packageId>LuisSousa.SkipdoorFixes</packageId>
+  <supportedVersions>
+    <li>1.7</li>
+  </supportedVersions>
+  <description>Unofficial fixes for the Vanilla Psycasts Expanded skipdoor on RimWorld 1.7.
+
+- No more UI flickering at 1x or the UI disappearing at 2x/3x while a skipdoor exists.
+- The portal no longer shows "screenshots" of your UI.
+- Pawns keep their job, duty and carried item when hopping through a skipdoor on the same map.
+- Pawns no longer arrive at the map corner or inside sealed, unexplored rooms.
+- Portals only redraw while on screen, at most once per frame.
+
+Patch-only, safe to add or remove mid-save.</description>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+    </li>
+    <li>
+      <packageId>OskarPotocki.VanillaFactionsExpanded.Core</packageId>
+      <displayName>Vanilla Expanded Framework</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2023507013</steamWorkshopUrl>
+    </li>
+    <li>
+      <packageId>VanillaExpanded.VPsycastsE</packageId>
+      <displayName>Vanilla Psycasts Expanded</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2842502659</steamWorkshopUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+    <li>OskarPotocki.VanillaFactionsExpanded.Core</li>
+    <li>VanillaExpanded.VPsycastsE</li>
+  </loadAfter>
+</ModMetaData>

@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Builds against the game's own runtime assemblies (RimWorld 1.7 on the Waylith engine
+    ships a self-contained .NET 10 runtime with UnityEngine redirected to UnityStubs).
+    Override paths with: dotnet build -p:RimWorldDir=... -p:WorkshopDir=...
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>SkipdoorFixes</AssemblyName>
+    <RootNamespace>SkipdoorFixes</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
+    <DebugType>none</DebugType>
+    <OutputPath>..\1.7\Assemblies\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS1701;CS1702</NoWarn>
+
+    <RimWorldDir Condition="'$(RimWorldDir)' == ''">C:\Program Files (x86)\Steam\steamapps\common\RimWorld</RimWorldDir>
+    <WorkshopDir Condition="'$(WorkshopDir)' == ''">C:\Program Files (x86)\Steam\steamapps\workshop\content\294100</WorkshopDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Game runtime (compile-time only, never copied) -->
+    <Reference Include="System.Private.CoreLib"><HintPath>$(RimWorldDir)\System.Private.CoreLib.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="System.Runtime"><HintPath>$(RimWorldDir)\System.Runtime.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="System.Collections"><HintPath>$(RimWorldDir)\System.Collections.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="System.Linq"><HintPath>$(RimWorldDir)\System.Linq.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="netstandard"><HintPath>$(RimWorldDir)\netstandard.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="mscorlib"><HintPath>$(RimWorldDir)\mscorlib.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Assembly-CSharp"><HintPath>$(RimWorldDir)\Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityStubs"><HintPath>$(RimWorldDir)\UnityStubs.dll</HintPath><Private>false</Private></Reference>
+
+    <!-- Mods -->
+    <Reference Include="0Harmony"><HintPath>$(WorkshopDir)\2009463077\1.7\Assemblies\0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="VEF"><HintPath>$(WorkshopDir)\2023507013\1.7\Assemblies\VEF.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="VanillaPsycastsExpanded"><HintPath>$(WorkshopDir)\2842502659\1.7\Assemblies\VanillaPsycastsExpanded.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+
+</Project>

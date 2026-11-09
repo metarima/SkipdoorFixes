@@ -1,0 +1,36 @@
+[h1]Skipdoor Fixes[/h1]
+Unofficial fixes for the [b]Vanilla Psycasts Expanded[/b] skipdoor (the [i]DoorTeleporter[/i] in Vanilla Expanded Framework) on [b]RimWorld 1.7[/b].
+
+[h2]What it fixes[/h2]
+[list]
+[*][b]UI flickering at 1x speed and the UI disappearing at 2x/3x[/b] while a skipdoor exists.
+[*][b]The portal showing "screenshots" of your UI[/b] instead of its swirl.
+[*][b]Pawns losing their job, duty or group after using a skipdoor.[/b] Same-map hops now move the pawn instead of making it leave and re-enter the map, so it keeps its job and whatever it is carrying.
+[*][b]Pawns arriving at the map corner[/b] (or inside unexplored, sealed-off rooms) when the cells next to the destination door are blocked.
+[/list]
+
+[h2]Performance[/h2]
+Unmodded, every skipdoor redraws its portal every tick, on every map, even off screen. This mod redraws it at most once per frame and only while the door is on screen.
+
+Measured on a 1,500-mod colony with 2 skipdoors at 3x speed:
+[table]
+[tr][th][/th][th]Without[/th][th]With[/th][/tr]
+[tr][td]Doors on screen[/td][td]~450–680 µs per tick[/td][td]~75–120 µs per tick[/td][/tr]
+[tr][td]Doors off screen[/td][td]~650–700 µs per tick[/td][td]~3 µs per tick[/td][/tr]
+[/table]
+At 3x that is roughly 120 ms of every second spent on two doors without the fix, and under 1 ms with it when you are not looking at them.
+
+[h2]Details[/h2]
+[list]
+[*]Harmony patches only. No defs, no settings, nothing stored in your save: [b]safe to add or remove mid-save.[/b]
+[*]Load after Vanilla Psycasts Expanded.
+[*]Written to work alongside Skipdoor Menu, Reduce Skipdoor Distortion Effects and Skipdoor Pathing.
+[*]Built for RimWorld 1.7 (Waylith engine).
+[/list]
+
+[h2]Why the UI broke[/h2]
+VEF redraws the portal with [i]Graphics.Blit[/i] every tick. On the 1.7 engine, Blit leaves the active render target pointing at the portal texture, and the game then draws its whole UI into the portal instead of onto your screen. This mod restores the render target after each redraw.
+
+[url=https://github.com/metarima/SkipdoorFixes]Source code on GitHub[/url]
+
+The fixes have also been offered to the Vanilla Expanded team. If they ship them, this mod becomes unnecessary and can simply be removed.
