@@ -7,7 +7,7 @@ Harmony patch mod for the Vanilla Psycasts Expanded skipdoor (`VEF.Buildings.Doo
 | Patch | Problem |
 |---|---|
 | `DoorTeleporter.RecacheBackground` | `Graphics.Blit` leaves `RenderTexture.active` on the portal texture; on Waylith that redirects all GUI drawing into it (UI flicker at 1x, no UI at 2x/3x). Restores the render target and only re-blits once per frame for on-screen doors. |
-| `DoorTeleporter.Teleport` | VEF uses `Pawn.ExitMap()` even for same-map hops, which clears lord, duty and mind state and fires "left map" signals. Same-map hops now move the pawn; cross-map hops despawn and respawn it. |
+| `DoorTeleporter.Teleport` | VEF uses `Pawn.ExitMap()` even for same-map hops, which clears lord, duty and mind state and fires "left map" signals. Same-map hops now move the pawn; cross-map hops still exit the map (with `teleporting` set, like vanilla farskip) and reset the pather on arrival. |
 | `Skipdoor.DoTeleportEffects` | Arrival cell falls back to `(0,0,0)` when no cardinal neighbour is standable. Picks a standable, unfogged cell next to the door instead. |
 | Skipdoor Pathing (Unlimited), if loaded | Its route planner ignores the levels of As above, So below II and replays a 60-tick cached route after the hop, so pawns walk between levels to reach a skipdoor and bounce between doors forever. Routes whose doors are on the wrong level, or whose exit is nearer than the entry, are rejected. Reaching the entry door also counted as reaching the job's destination (sleeping outside the bed, building from across the map); the pawn now waits at the door for the hop. |
 

@@ -6,7 +6,6 @@ using RimWorld.Planet;
 using VanillaPsycastsExpanded.Skipmaster;
 using VEF.Buildings;
 using Verse;
-using Verse.AI.Group;
 
 namespace SkipdoorFixes
 {
@@ -48,9 +47,9 @@ namespace SkipdoorFixes
         }
     }
 
-    // VEF moves pawns with ExitMap(), which treats every hop as leaving the map: lord/duty/mind state are
-    // cleared, quest "LeftMap" signals fire and the pather is never reset. Same-map hops just move the pawn
-    // (keeps its job and carried thing), cross-map hops despawn/respawn like vanilla skip.
+    // VEF moves pawns with ExitMap() even within one map, which clears lord/duty/mind state and fires quest
+    // "LeftMap" signals for a pawn that never left. Same-map hops now just move the pawn (keeps its job and
+    // carried thing); cross-map hops still exit the map like vanilla farskip, then reset the pather.
     [HarmonyPatch(typeof(DoorTeleporter), nameof(DoorTeleporter.Teleport))]
     public static class DoorTeleporter_Teleport_Patch
     {
@@ -78,14 +77,22 @@ namespace SkipdoorFixes
 
                 bool drafted = pawn.Drafted;
                 bool selected = Find.Selector.IsSelected(pawn);
-                Lord lord = pawn.GetLord();
 
-                pawn.DeSpawnOrDeselect();
+                // Another map is a real map exit, so keep ExitMap()'s lord, faction, ideo and quest bookkeeping.
+                // teleporting stops it counting as walking off the map (no prisoner escape, beds kept), like
+                // vanilla farskip.
+                pawn.teleporting = true;
+                try
+                {
+                    pawn.ExitMap(false, Rot4.Invalid);
+                }
+                finally
+                {
+                    pawn.teleporting = false;
+                }
                 GenSpawn.Spawn(pawn, cell, mapTarget);
                 pawn.Notify_Teleported(endCurrentJob: false);
 
-                if (lord != null && lord.ownedPawns.Contains(pawn))
-                    lord.Notify_PawnLost(pawn, PawnLostCondition.ExitedMap);
                 if (drafted && !pawn.Downed)
                     pawn.drafter.Drafted = true;
                 if (selected && pawn.Map == Find.CurrentMap)
@@ -108,7 +115,7 @@ namespace SkipdoorFixes
             catch (Exception e)
             {
                 Log.Error($"[Skipdoor Fixes] Teleport failed for {pawn.ToStringSafe()}: {e}");
-                if (!pawn.Spawned && !pawn.Destroyed && !pawn.IsWorldPawn())
+                if (!pawn.Spawned && !pawn.Destroyed)
                     GenSpawn.Spawn(pawn, ArrivalCells.Pick(null, mapTarget, cellTarget), mapTarget);
             }
             finally
